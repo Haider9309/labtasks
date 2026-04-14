@@ -1,0 +1,205 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int id;
+    string name;
+    int priority;
+    Node* next;
+
+    Node(int sid, string sname, int p)
+    {
+        id = sid;
+        name = sname;
+        priority = p;
+        next = NULL;
+    }
+};
+
+class BookQueue
+{
+private:
+    Node* head;
+
+public:
+    BookQueue()
+    {
+        head = NULL;
+    }
+
+    void addStudent(int id, string name, int priority)
+    {
+        Node* newNode = new Node(id, name, priority);
+
+        if (head == NULL)
+        {
+            head = newNode;
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+
+        temp->next = newNode;
+    }
+
+    void removeStudent(int id)
+    {
+        if (head == NULL)
+        {
+            cout << "Queue empty\n";
+            return;
+        }
+
+        if (head->id == id)
+        {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            cout << "Student removed\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp->next != NULL && temp->next->id != id)
+        {
+            temp = temp->next;
+        }
+
+        if (temp->next == NULL)
+        {
+            cout << "Student not found\n";
+            return;
+        }
+
+        Node* delNode = temp->next;
+        temp->next = temp->next->next;
+        delete delNode;
+
+        cout << "Student removed\n";
+    }
+
+    void updatePriority(int id, int newPriority)
+    {
+        if (head == NULL)
+            return;
+
+        Node* temp = head;
+
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                temp->priority = newPriority;
+                cout << "Priority updated\n";
+                return;
+            }
+            temp = temp->next;
+        }
+
+        cout << "Student not found\n";
+    }
+
+    void serveStudent()
+    {
+        if (head == NULL)
+        {
+            cout << "No students in queue\n";
+            return;
+        }
+
+        Node* temp = head;
+        head = head->next;
+
+        cout << "Book issued to: " << temp->name << endl;
+
+        delete temp;
+    }
+
+    void countStudents()
+    {
+        int count = 0;
+        Node* temp = head;
+
+        while (temp != NULL)
+        {
+            count++;
+            temp = temp->next;
+        }
+
+        cout << "Total students: " << count << endl;
+    }
+
+    void display()
+    {
+        if (head == NULL)
+        {
+            cout << "No reservations\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        cout << "\nReservation List:\n";
+
+        while (temp != NULL)
+        {
+            cout << "ID: " << temp->id
+                 << " | Name: " << temp->name
+                 << " | Priority: " << temp->priority << endl;
+            temp = temp->next;
+        }
+    }
+};
+
+class Library
+{
+public:
+    BookQueue book1;
+    BookQueue book2;
+};
+
+int main()
+{
+    Library lib;
+
+    // ===== BOOK 1 =====
+    cout << "BOOK 1 RESERVATIONS\n";
+
+    lib.book1.addStudent(1, "Ali", 2);
+    lib.book1.addStudent(2, "Sara", 1);
+    lib.book1.addStudent(3, "Ahmed", 3);
+
+    lib.book1.display();
+
+    lib.book1.updatePriority(3, 1);
+    lib.book1.display();
+
+    lib.book1.removeStudent(2);
+    lib.book1.display();
+
+    lib.book1.countStudents();
+
+    lib.book1.serveStudent();
+    lib.book1.display();
+
+    // ===== BOOK 2 =====
+    cout << "\nBOOK 2 RESERVATIONS\n";
+
+    lib.book2.addStudent(10, "Zain", 2);
+    lib.book2.addStudent(11, "Hira", 1);
+
+    lib.book2.display();
+
+    lib.book2.serveStudent();
+    lib.book2.display();
+
+    return 0;
+}
