@@ -1,0 +1,101 @@
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Package {
+public:
+    int id;
+    string address;
+    int startTime;
+    int endTime;
+};
+
+class PackageQueue {
+private:
+    Package* arr;
+    int frontIndex;
+    int rearIndex;
+    int size;
+    int capacity;
+
+public:
+    PackageQueue(int cap) {
+        capacity = cap;
+        arr = new Package[capacity];
+        frontIndex = 0;
+        rearIndex = -1;
+        size = 0;
+    }
+
+    void enqueue(int id, string address, int startTime, int endTime) {
+        if (size == capacity) {
+            cout << "Queue Full\n";
+            return;
+        }
+        rearIndex++;
+        arr[rearIndex].id = id;
+        arr[rearIndex].address = address;
+        arr[rearIndex].startTime = startTime;
+        arr[rearIndex].endTime = endTime;
+        size++;
+    }
+
+    void dequeue() {
+        if (size == 0) {
+            cout << "No packages\n";
+            return;
+        }
+        cout << "Delivered Package ID: " << arr[frontIndex].id << endl;
+        frontIndex++;
+        size--;
+    }
+
+    void front() {
+        if (size == 0) {
+            cout << "Queue Empty\n";
+            return;
+        }
+        cout << "Front Package -> ID: " << arr[frontIndex].id
+            << ", Address: " << arr[frontIndex].address
+            << ", Time: " << arr[frontIndex].startTime
+            << "-" << arr[frontIndex].endTime << endl;
+    }
+
+    void display() {
+        if (size == 0) {
+            cout << "No packages in queue\n";
+            return;
+        }
+        for (int i = frontIndex; i <= rearIndex; i++) {
+            cout << "ID: " << arr[i].id
+                << ", Address: " << arr[i].address
+                << ", Time: " << arr[i].startTime
+                << "-" << arr[i].endTime << endl;
+        }
+    }
+
+    void timeToDeliver(int currentTime) {
+        while (size > 0) {
+            if (currentTime >= arr[frontIndex].startTime && currentTime <= arr[frontIndex].endTime) {
+                cout << "Delivering Package ID: " << arr[frontIndex].id << endl;
+                frontIndex++;
+                size--;
+                break;
+            }
+            else {
+                cout << "Expired Package ID: " << arr[frontIndex].id << endl;
+                frontIndex++;
+                size--;
+            }
+        }
+
+        if (size == 0) {
+            cout << "No valid packages left\n";
+        }
+    }
+
+    ~PackageQueue() {
+        delete[] arr;
+    }
+};
