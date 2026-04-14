@@ -1,0 +1,66 @@
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Queue {
+private:
+    string* arr;
+    int frontIndex;
+    int rearIndex;
+    int size;
+    int capacity;
+
+public:
+    Queue(int cap) {
+        capacity = cap;
+        arr = new string[capacity];
+        frontIndex = 0;
+        rearIndex = -1;
+        size = 0;
+    }
+
+    void enqueue(string document_name) {
+        if (size == capacity) {
+            cout << "Queue is Full\n";
+            return;
+        }
+        rearIndex++;
+        arr[rearIndex] = document_name;
+        size++;
+    }
+
+    void dequeue() {
+        if (size == 0) {
+            cout << "No document to print\n";
+            return;
+        }
+        cout << "Printing: " << arr[frontIndex] << endl;
+        frontIndex++;
+        size--;
+    }
+
+    void front() {
+        if (size == 0) {
+            cout << "Queue is Empty\n";
+            return;
+        }
+        cout << "Front Document: " << arr[frontIndex] << endl;
+    }
+
+    void display() {
+        if (size == 0) {
+            cout << "No pending jobs\n";
+            return;
+        }
+        cout << "Pending Jobs:\n";
+        for (int i = frontIndex; i <= rearIndex; i++) {
+            cout << arr[i] << endl;
+        }
+    }
+
+    ~Queue() {
+        delete[] arr;
+    }
+};
+
