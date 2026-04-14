@@ -1,0 +1,141 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int id;
+    string name;
+    Node* next;
+
+    Node(int pid, string pname)
+    {
+        id = pid;
+        name = pname;
+        next = NULL;
+    }
+};
+
+class PatientQueue
+{
+private:
+    Node* head;
+
+public:
+    PatientQueue()
+    {
+        head = NULL;
+    }
+
+    void addPatient(int id, string name)
+    {
+        Node* newNode = new Node(id, name);
+
+        if (head == NULL)
+        {
+            head = newNode;
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+
+        temp->next = newNode;
+    }
+
+    void cancelPatient(int id)
+    {
+        if (head == NULL)
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        if (head->id == id)
+        {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            cout << "Patient removed\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp->next != NULL && temp->next->id != id)
+        {
+            temp = temp->next;
+        }
+
+        if (temp->next == NULL)
+        {
+            cout << "Patient not found\n";
+            return;
+        }
+
+        Node* delNode = temp->next;
+        temp->next = temp->next->next;
+        delete delNode;
+
+        cout << "Patient removed\n";
+    }
+
+    void display()
+    {
+        if (head == NULL)
+        {
+            cout << "No patients in queue\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        cout << "\nPatients in Queue:\n";
+
+        while (temp != NULL)
+        {
+            cout << "ID: " << temp->id << " | Name: " << temp->name << endl;
+            temp = temp->next;
+        }
+    }
+
+    void countPatients()
+    {
+        int count = 0;
+        Node* temp = head;
+
+        while (temp != NULL)
+        {
+            count++;
+            temp = temp->next;
+        }
+
+        cout << "Total patients: " << count << endl;
+    }
+};
+
+int main()
+{
+    PatientQueue queue;
+
+    // Sample data
+    queue.addPatient(101, "Ali");
+    queue.addPatient(102, "Sara");
+    queue.addPatient(103, "Ahmed");
+
+    queue.display();
+
+    queue.countPatients();
+
+    queue.cancelPatient(102);
+
+    queue.display();
+
+    queue.countPatients();
+
+    return 0;
+}
