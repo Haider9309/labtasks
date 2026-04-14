@@ -1,0 +1,107 @@
+#include <iostream>
+using namespace std;
+
+class StackChar {
+private:
+    char arr[100];
+    int top;
+public:
+    StackChar() { top = -1; }
+
+    void push(char c) { arr[++top] = c; }
+    char pop() { return arr[top--]; }
+    bool isEmpty() { return top == -1; }
+    void clear() { top = -1; }
+};
+
+class StackInt {
+private:
+    int arr[100];
+    int top;
+public:
+    StackInt() { top = -1; }
+
+    void push(int x) { arr[++top] = x; }
+    int pop() { return arr[top--]; }
+    bool isEmpty() { return top == -1; }
+    void clear() { top = -1; }
+};
+
+int main() {
+    StackChar undoChar, redoChar;
+    StackInt undoType, redoType;
+
+    string text = "";
+    int choice;
+    char ch;
+
+    do {
+        cout << "\nText: " << text << endl;
+
+        cout << "1. Type\n2. Delete\n3. Undo\n4. Redo\n5. Exit\n";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter char: ";
+            cin >> ch;
+
+            text += ch;
+
+            undoChar.push(ch);
+            undoType.push(1); 
+            redoChar.clear();
+            redoType.clear();
+            break;
+
+        case 2:
+            if (text.length() == 0) break;
+
+            ch = text[text.length() - 1];
+            text.erase(text.length() - 1);
+
+            undoChar.push(ch);
+            undoType.push(2); 
+            redoChar.clear();
+            redoType.clear();
+            break;
+
+        case 3: 
+            if (undoChar.isEmpty()) break;
+
+            ch = undoChar.pop();
+            int type = undoType.pop();
+
+            if (type == 1) {
+                text.erase(text.length() - 1);
+            }
+            else {
+                text += ch;
+            }
+
+            redoChar.push(ch);
+            redoType.push(type);
+            break;
+
+        case 4: 
+            if (redoChar.isEmpty()) break;
+
+            ch = redoChar.pop();
+            int type2 = redoType.pop();
+
+            if (type2 == 1) {
+                text += ch;
+            }
+            else {
+                text.erase(text.length() - 1);
+            }
+
+            undoChar.push(ch);
+            undoType.push(type2);
+            break;
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
