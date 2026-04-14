@@ -1,0 +1,58 @@
+
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class Stack {
+private:
+    T* arr;
+    int topIndex;
+    int capacity;
+
+public:
+    Stack(int cap) {
+        capacity = cap;
+        arr = new T[capacity];
+        topIndex = -1;
+    }
+
+    void push(T value) {
+        if (isFull()) {
+            cout << "Stack Overflow\n";
+            return;
+        }
+        topIndex++;
+        arr[topIndex] = value;
+    }
+
+    T pop() {
+        if (isEmpty()) {
+            cout << "Stack Underflow\n";
+            return -1;
+        }
+        T val = arr[topIndex];
+        topIndex--;
+        return val;
+    }
+
+    T top() const {
+        if (isEmpty()) {
+            cout << "Stack Empty\n";
+            return -1;
+        }
+        return arr[topIndex];
+    }
+
+    bool isEmpty() const {
+        return topIndex == -1;
+    }
+
+    bool isFull() const {
+        return topIndex == capacity - 1;
+    }
+
+    ~Stack() {
+        delete[] arr;
+    }
+};
+
