@@ -1,0 +1,220 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int value)
+    {
+        data = value;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class DoublyLinkedList
+{
+private:
+    Node* head;
+    Node* tail;
+
+public:
+    DoublyLinkedList()
+    {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    void insertAtEnd(int value)
+    {
+        Node* newNode = new Node(value);
+
+        if (head == nullptr)
+        {
+            head = tail = newNode;
+            return;
+        }
+
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
+    }
+
+    void insertAtStart(int value)
+    {
+        Node* newNode = new Node(value);
+
+        if (head == nullptr)
+        {
+            head = tail = newNode;
+            return;
+        }
+
+        newNode->next = head;
+        head->prev = newNode;
+        head = newNode;
+    }
+
+    void insertAtPosition(int value, int position)
+    {
+        if (position <= 1 || head == nullptr)
+        {
+            insertAtStart(value);
+            return;
+        }
+
+        Node* temp = head;
+        int count = 1;
+
+        while (temp->next != nullptr && count < position - 1)
+        {
+            temp = temp->next;
+            count++;
+        }
+
+        if (temp->next == nullptr)
+        {
+            insertAtEnd(value);
+            return;
+        }
+
+        Node* newNode = new Node(value);
+
+        newNode->next = temp->next;
+        newNode->prev = temp;
+
+        temp->next->prev = newNode;
+        temp->next = newNode;
+    }
+
+    void deleteByValue(int value)
+    {
+        if (head == nullptr)
+        {
+            cout << "List is empty\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp != nullptr && temp->data != value)
+        {
+            temp = temp->next;
+        }
+
+        if (temp == nullptr)
+        {
+            cout << "Value not found\n";
+            return;
+        }
+
+        if (head == tail)
+        {
+            head = tail = nullptr;
+        }
+        else if (temp == head)
+        {
+            head = head->next;
+            head->prev = nullptr;
+        }
+        else if (temp == tail)
+        {
+            tail = tail->prev;
+            tail->next = nullptr;
+        }
+        else
+        {
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+        }
+
+        delete temp;
+    }
+
+    void displayForward()
+    {
+        if (head == nullptr)
+        {
+            cout << "List is empty\n";
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp != nullptr)
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+
+        cout << endl;
+    }
+
+    void displayReverse()
+    {
+        if (tail == nullptr)
+        {
+            cout << "List is empty\n";
+            return;
+        }
+
+        Node* temp = tail;
+
+        while (temp != nullptr)
+        {
+            cout << temp->data << " ";
+            temp = temp->prev;
+        }
+
+        cout << endl;
+    }
+};
+
+int main()
+{
+    DoublyLinkedList list;
+
+    list.insertAtEnd(10);
+    list.insertAtEnd(20);
+    list.insertAtEnd(30);
+
+    cout << "List after inserting at end:\n";
+    list.displayForward();
+
+    list.insertAtStart(5);
+
+    cout << "\nList after inserting at start:\n";
+    list.displayForward();
+
+    list.insertAtPosition(15, 3);
+
+    cout << "\nList after inserting at specific position:\n";
+    list.displayForward();
+
+    cout << "\nForward Traversal:\n";
+    list.displayForward();
+
+    cout << "\nReverse Traversal:\n";
+    list.displayReverse();
+
+    list.deleteByValue(5);
+
+    cout << "\nList after deleting first node:\n";
+    list.displayForward();
+
+    list.deleteByValue(30);
+
+    cout << "\nList after deleting last node:\n";
+    list.displayForward();
+
+    list.deleteByValue(15);
+
+    cout << "\nList after deleting middle node:\n";
+    list.displayForward();
+
+    return 0;
+}
